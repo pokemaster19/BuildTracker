@@ -1,0 +1,471 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Система Управления Дефектами | СтройКонтроль</title>
+    <link rel="stylesheet" href="style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <!-- Chart.js for data visualization -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body>
+    <div id="app">
+        <!-- Header -->
+        <header class="header">
+            <div class="header__container">
+                <div class="header__left">
+                    <button class="mobile-menu-btn" id="mobileMenuBtn" aria-label="Открыть меню">
+                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <line x1="3" y1="6" x2="21" y2="6"></line>
+                            <line x1="3" y1="12" x2="21" y2="12"></line>
+                            <line x1="3" y1="18" x2="21" y2="18"></line>
+                        </svg>
+                    </button>
+                    <div class="header__logo">
+                        <svg class="logo-icon" width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path>
+                            <polyline points="9,22 9,12 15,12 15,22"></polyline>
+                        </svg>
+                        <span class="logo-text">СтройКонтроль</span>
+                    </div>
+                </div>
+                
+                <div class="header__center">
+                    <div class="search-bar">
+                        <svg class="search-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <circle cx="11" cy="11" r="8"></circle>
+                            <path d="m21 21-4.35-4.35"></path>
+                        </svg>
+                        <input type="text" placeholder="Поиск дефектов..." class="search-input" id="globalSearch">
+                    </div>
+                </div>
+
+                <div class="header__right">
+                    <button class="theme-toggle" id="themeToggle" aria-label="Переключить тему">
+                        <svg class="theme-icon theme-icon--light" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <circle cx="12" cy="12" r="5"></circle>
+                            <line x1="12" y1="1" x2="12" y2="3"></line>
+                            <line x1="12" y1="21" x2="12" y2="23"></line>
+                            <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line>
+                            <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line>
+                            <line x1="1" y1="12" x2="3" y2="12"></line>
+                            <line x1="21" y1="12" x2="23" y2="12"></line>
+                            <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line>
+                            <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
+                        </svg>
+                        <svg class="theme-icon theme-icon--dark hidden" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
+                        </svg>
+                    </button>
+                    
+                    <div class="notifications">
+                        <button class="notifications__btn" aria-label="Уведомления">
+                            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"></path>
+                                <path d="M13.73 21a2 2 0 0 1-3.46 0"></path>
+                            </svg>
+                            <span class="notifications__badge">3</span>
+                        </button>
+                    </div>
+
+                    <div class="user-profile">
+                        <div class="user-profile__info">
+                            <span class="user-profile__name">Алексей Иванов</span>
+                            <span class="user-profile__role">Главный инженер</span>
+                        </div>
+                        <div class="user-profile__avatar">АИ</div>
+                    </div>
+                </div>
+            </div>
+        </header>
+
+        <div class="app-layout">
+            <!-- Sidebar -->
+            <aside class="sidebar" id="sidebar">
+                <nav class="sidebar__nav">
+                    <a href="#dashboard" class="nav-item nav-item--active" data-page="dashboard">
+                        <svg class="nav-item__icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect>
+                            <line x1="9" y1="9" x2="15" y2="9"></line>
+                            <line x1="9" y1="15" x2="15" y2="15"></line>
+                        </svg>
+                        <span class="nav-item__text">Дашборд</span>
+                    </a>
+                    
+                    <a href="#defects" class="nav-item" data-page="defects">
+                        <svg class="nav-item__icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <circle cx="12" cy="12" r="10"></circle>
+                            <line x1="15" y1="9" x2="9" y2="15"></line>
+                            <line x1="9" y1="9" x2="15" y2="15"></line>
+                        </svg>
+                        <span class="nav-item__text">Дефекты</span>
+                        <span class="nav-item__badge">5</span>
+                    </a>
+                    
+                    <a href="#reports" class="nav-item" data-page="reports">
+                        <svg class="nav-item__icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <line x1="18" y1="20" x2="18" y2="10"></line>
+                            <line x1="12" y1="20" x2="12" y2="4"></line>
+                            <line x1="6" y1="20" x2="6" y2="14"></line>
+                        </svg>
+                        <span class="nav-item__text">Отчеты</span>
+                    </a>
+                    
+                    <a href="#settings" class="nav-item" data-page="settings">
+                        <svg class="nav-item__icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <circle cx="12" cy="12" r="3"></circle>
+                            <path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1 1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"></path>
+                        </svg>
+                        <span class="nav-item__text">Настройки</span>
+                    </a>
+                </nav>
+            </aside>
+
+            <!-- Main Content -->
+            <main class="main-content">
+                <!-- Dashboard Page -->
+                <div class="page" id="dashboard-page">
+                    <div class="page__header">
+                        <h1 class="page__title">Дашборд</h1>
+                        <p class="page__subtitle">Обзор состояния дефектов по проекту</p>
+                    </div>
+
+                    <!-- Statistics Cards -->
+                    <div class="stats-grid">
+                        <div class="stat-card">
+                            <div class="stat-card__icon stat-card__icon--primary">
+                                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <circle cx="12" cy="12" r="10"></circle>
+                                    <line x1="15" y1="9" x2="9" y2="15"></line>
+                                    <line x1="9" y1="9" x2="15" y2="15"></line>
+                                </svg>
+                            </div>
+                            <div class="stat-card__content">
+                                <div class="stat-card__number" id="totalDefects">5</div>
+                                <div class="stat-card__label">Всего дефектов</div>
+                            </div>
+                        </div>
+
+                        <div class="stat-card">
+                            <div class="stat-card__icon stat-card__icon--warning">
+                                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <circle cx="12" cy="12" r="10"></circle>
+                                    <line x1="12" y1="8" x2="12" y2="12"></line>
+                                    <line x1="12" y1="16" x2="12.01" y2="16"></line>
+                                </svg>
+                            </div>
+                            <div class="stat-card__content">
+                                <div class="stat-card__number" id="newDefects">2</div>
+                                <div class="stat-card__label">Новые</div>
+                            </div>
+                        </div>
+
+                        <div class="stat-card">
+                            <div class="stat-card__icon stat-card__icon--info">
+                                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <circle cx="12" cy="12" r="10"></circle>
+                                    <polyline points="12,6 12,12 16,14"></polyline>
+                                </svg>
+                            </div>
+                            <div class="stat-card__content">
+                                <div class="stat-card__number" id="inProgressDefects">1</div>
+                                <div class="stat-card__label">В работе</div>
+                            </div>
+                        </div>
+
+                        <div class="stat-card">
+                            <div class="stat-card__icon stat-card__icon--success">
+                                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path>
+                                    <polyline points="22,4 12,14.01 9,11.01"></polyline>
+                                </svg>
+                            </div>
+                            <div class="stat-card__content">
+                                <div class="stat-card__number" id="completedDefects">1</div>
+                                <div class="stat-card__label">Завершены</div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Charts Section -->
+                    <div class="charts-section">
+                        <div class="chart-card">
+                            <div class="chart-card__header">
+                                <h3 class="chart-card__title">Статусы дефектов</h3>
+                            </div>
+                            <div class="chart-container" style="position: relative; height: 300px;">
+                                <canvas id="statusChart"></canvas>
+                            </div>
+                        </div>
+
+                        <div class="chart-card">
+                            <div class="chart-card__header">
+                                <h3 class="chart-card__title">Динамика по месяцам</h3>
+                            </div>
+                            <div class="chart-container" style="position: relative; height: 300px;">
+                                <canvas id="trendChart"></canvas>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Recent Defects -->
+                    <div class="recent-defects">
+                        <div class="section-header">
+                            <h3 class="section-title">Последние дефекты</h3>
+                            <button class="btn btn--outline btn--sm" onclick="showPage('defects')">Все дефекты</button>
+                        </div>
+                        <div class="defects-table" id="recentDefectsTable">
+                            <!-- Table will be populated by JavaScript -->
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Defects Page -->
+                <div class="page hidden" id="defects-page">
+                    <div class="page__header">
+                        <h1 class="page__title">Управление дефектами</h1>
+                        <button class="btn btn--primary" onclick="showAddDefectModal()">
+                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <line x1="12" y1="5" x2="12" y2="19"></line>
+                                <line x1="5" y1="12" x2="19" y2="12"></line>
+                            </svg>
+                            Добавить дефект
+                        </button>
+                    </div>
+
+                    <!-- Filters -->
+                    <div class="filters-bar">
+                        <div class="filters-group">
+                            <select class="form-control" id="statusFilter">
+                                <option value="">Все статусы</option>
+                                <option value="new">Новый</option>
+                                <option value="in_progress">В работе</option>
+                                <option value="completed">Завершен</option>
+                                <option value="rejected">Отклонен</option>
+                            </select>
+                            
+                            <select class="form-control" id="priorityFilter">
+                                <option value="">Все приоритеты</option>
+                                <option value="low">Низкий</option>
+                                <option value="medium">Средний</option>
+                                <option value="high">Высокий</option>
+                                <option value="critical">Критический</option>
+                            </select>
+                            
+                            <select class="form-control" id="categoryFilter">
+                                <option value="">Все категории</option>
+                                <option value="structures">Конструкции</option>
+                                <option value="plumbing">Сантехника</option>
+                                <option value="electrical">Электрика</option>
+                                <option value="finishing">Отделка</option>
+                                <option value="hvac">Вентиляция</option>
+                            </select>
+                        </div>
+                        
+                        <div class="search-group">
+                            <input type="text" class="form-control" id="defectsSearch" placeholder="Поиск по названию или описанию...">
+                        </div>
+                    </div>
+
+                    <!-- Defects Grid -->
+                    <div class="defects-grid" id="defectsGrid">
+                        <!-- Defect cards will be populated by JavaScript -->
+                    </div>
+                </div>
+
+                <!-- Reports Page -->
+                <div class="page hidden" id="reports-page">
+                    <div class="page__header">
+                        <h1 class="page__title">Отчеты и аналитика</h1>
+                        <p class="page__subtitle">Детальный анализ дефектов проекта</p>
+                    </div>
+
+                    <div class="reports-grid">
+                        <div class="chart-card">
+                            <div class="chart-card__header">
+                                <h3 class="chart-card__title">Дефекты по категориям</h3>
+                            </div>
+                            <div class="chart-container" style="position: relative; height: 300px;">
+                                <canvas id="categoryChart"></canvas>
+                            </div>
+                        </div>
+
+                        <div class="chart-card">
+                            <div class="chart-card__header">
+                                <h3 class="chart-card__title">Приоритеты дефектов</h3>
+                            </div>
+                            <div class="chart-container" style="position: relative; height: 300px;">
+                                <canvas id="priorityChart"></canvas>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Settings Page -->
+                <div class="page hidden" id="settings-page">
+                    <div class="page__header">
+                        <h1 class="page__title">Настройки</h1>
+                        <p class="page__subtitle">Персонализация и конфигурация системы</p>
+                    </div>
+
+                    <div class="settings-content">
+                        <div class="settings-section">
+                            <h3 class="settings-section__title">Профиль пользователя</h3>
+                            <div class="form-group">
+                                <label class="form-label">Имя</label>
+                                <input type="text" class="form-control" value="Алексей Иванов">
+                            </div>
+                            <div class="form-group">
+                                <label class="form-label">Email</label>
+                                <input type="email" class="form-control" value="a.ivanov@company.com">
+                            </div>
+                            <div class="form-group">
+                                <label class="form-label">Должность</label>
+                                <input type="text" class="form-control" value="Главный инженер">
+                            </div>
+                        </div>
+
+                        <div class="settings-section">
+                            <h3 class="settings-section__title">Внешний вид</h3>
+                            <div class="form-group">
+                                <label class="form-label">Тема оформления</label>
+                                <div class="theme-switcher">
+                                    <button class="theme-option theme-option--light active" data-theme="light">
+                                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                            <circle cx="12" cy="12" r="5"></circle>
+                                            <line x1="12" y1="1" x2="12" y2="3"></line>
+                                            <line x1="12" y1="21" x2="12" y2="23"></line>
+                                        </svg>
+                                        Светлая
+                                    </button>
+                                    <button class="theme-option theme-option--dark" data-theme="dark">
+                                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                            <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
+                                        </svg>
+                                        Темная
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="settings-section">
+                            <h3 class="settings-section__title">Уведомления</h3>
+                            <div class="form-group">
+                                <label class="checkbox-label">
+                                    <input type="checkbox" checked>
+                                    <span class="checkmark"></span>
+                                    Email уведомления о новых дефектах
+                                </label>
+                            </div>
+                            <div class="form-group">
+                                <label class="checkbox-label">
+                                    <input type="checkbox" checked>
+                                    <span class="checkmark"></span>
+                                    Push уведомления в браузере
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </main>
+        </div>
+
+        <!-- Add Defect Modal -->
+        <div class="modal hidden" id="addDefectModal">
+            <div class="modal__backdrop" onclick="hideAddDefectModal()"></div>
+            <div class="modal__content">
+                <div class="modal__header">
+                    <h2 class="modal__title">Добавить новый дефект</h2>
+                    <button class="modal__close" onclick="hideAddDefectModal()">
+                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <line x1="18" y1="6" x2="6" y2="18"></line>
+                            <line x1="6" y1="6" x2="18" y2="18"></line>
+                        </svg>
+                    </button>
+                </div>
+                
+                <form class="modal__form" id="addDefectForm">
+                    <div class="form-group">
+                        <label class="form-label">Название дефекта *</label>
+                        <input type="text" class="form-control" name="title" required>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label class="form-label">Описание *</label>
+                        <textarea class="form-control" name="description" rows="3" required></textarea>
+                    </div>
+                    
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label class="form-label">Категория *</label>
+                            <select class="form-control" name="category" required>
+                                <option value="">Выберите категорию</option>
+                                <option value="structures">Конструкции</option>
+                                <option value="plumbing">Сантехника</option>
+                                <option value="electrical">Электрика</option>
+                                <option value="finishing">Отделка</option>
+                                <option value="hvac">Вентиляция</option>
+                            </select>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label class="form-label">Приоритет *</label>
+                            <select class="form-control" name="priority" required>
+                                <option value="">Выберите приоритет</option>
+                                <option value="low">Низкий</option>
+                                <option value="medium">Средний</option>
+                                <option value="high">Высокий</option>
+                                <option value="critical">Критический</option>
+                            </select>
+                        </div>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label class="form-label">Исполнитель</label>
+                        <select class="form-control" name="assignee">
+                            <option value="">Выберите исполнителя</option>
+                            <option value="Иван Петров">Иван Петров (Инженер-конструктор)</option>
+                            <option value="Сергей Сидоров">Сергей Сидоров (Сантехник)</option>
+                            <option value="Михаил Волков">Михаил Волков (Электрик)</option>
+                            <option value="Андрей Козлов">Андрей Козлов (Отделочник)</option>
+                            <option value="Дмитрий Новиков">Дмитрий Новиков (Специалист по вентиляции)</option>
+                        </select>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label class="form-label">Местоположение</label>
+                        <input type="text" class="form-control" name="location" placeholder="Блок А, 1 этаж, кв. 10">
+                    </div>
+                    
+                    <div class="form-group">
+                        <label class="form-label">Фотографии</label>
+                        <div class="file-upload" id="fileUpload">
+                            <div class="file-upload__zone">
+                                <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1">
+                                    <rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect>
+                                    <circle cx="8.5" cy="8.5" r="1.5"></circle>
+                                    <polyline points="21,15 16,10 5,21"></polyline>
+                                </svg>
+                                <p>Перетащите файлы сюда или <button type="button" class="file-upload__btn">выберите файлы</button></p>
+                                <p class="file-upload__hint">PNG, JPG до 5MB каждый</p>
+                            </div>
+                            <input type="file" class="file-upload__input" multiple accept="image/*">
+                        </div>
+                    </div>
+                    
+                    <div class="modal__actions">
+                        <button type="button" class="btn btn--outline" onclick="hideAddDefectModal()">Отмена</button>
+                        <button type="submit" class="btn btn--primary">Создать дефект</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+
+        <!-- Toast Notifications -->
+        <div class="toast-container" id="toastContainer"></div>
+    </div>
+
+    <script src="app.js"></script>
+</body>
+</html>
