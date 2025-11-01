@@ -1,0 +1,12 @@
+name: Lightweight CI
+
+on:
+  pull_request:
+    branches: [dev]
+
+jobs:
+  noop:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Quick check
+        run: echo "OK"
