@@ -1,0 +1,43 @@
+name: Example Workflow Node
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
+
+jobs:
+  example_job:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Set up environment
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y python3 python3-pip  # пример для Python нода
+
+      - name: Install dependencies
+        run: |
+          pip3 install -r requirements.txt
+
+      - name: Run linting
+        run: |
+          pylint **/*.py
+
+      - name: Run tests
+        run: |
+          pytest tests/
+
+      - name: Upload test reports
+        uses: actions/upload-artifact@v4
+        with:
+          name: test-reports
+          path: reports/
+
+      - name: Notify
+        run: echo "Workflow Node Execution Completed"
